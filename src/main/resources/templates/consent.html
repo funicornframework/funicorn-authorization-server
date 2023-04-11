@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Funicorn 登录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="../layui/layui.js"></script>
+    <style>
+        html,body { height:100%;}
+        .layui-fluid {
+            padding: 0 0 !important;
+            height:100%;
+        }
+        .layui-bg-gray {
+            background-color: white !important;
+        }
+
+        .layui-form-checkbox[lay-skin=primary] {
+            margin-top: 0 !important;
+        }
+
+        .layui-form-checkbox[lay-skin=primary]:hover i {
+            border-color: #0099FF !important;
+        }
+
+        .layui-form-checked[lay-skin=primary] i {
+            background-color: #0099FF !important;
+        }
+
+        .consent-box {
+            width: 520px;
+            min-height: 400px;
+            margin: 5% auto;
+            border-radius: 5px;
+            border: 1px solid #e5e5e5
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div class="layui-header" th:replace="header::header"></div>
+    <div class="layui-bg-gray">
+        <div class="layui-card consent-box">
+            <div class="layui-card-header"><h4 style="text-align: center"><b th:text="${clientName}"></b> 希望获得以下许可：</h4></div>
+            <div class="layui-card-body">
+                <form class="layui-form" name="consent_form" method="post" action="/oauth2/authorize">
+                    <input type="hidden" name="client_id" th:value="${clientId}">
+                    <input type="hidden" name="state" th:value="${state}">
+                    <div class="layui-form-item">
+                        <div th:each="scope: ${scopes}">
+                            <input type="checkbox" name="scope" lay-skin="primary" th:value="${scope.scope}"
+                                   th:id="${scope.scope}"
+                                   th:text="${scope.scope}=='profile'?(${scope.description}+'('+${principalName}+')'):${scope.description}"
+                                   checked readonly>
+                        </div>
+                    </div>
+                    <hr style="border-bottom:1px solid !important;color: #e5e5e5"/>
+                    <p><b th:text="${clientName}"></b> 尚未安装在您有权访问的任何账户上。</p>
+                    <hr style="border-bottom:1px solid !important;color: #e5e5e5"/>
+                    <div class="layui-form-item" style="text-align: center;">
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn" style="background-color: #0099FF;">授权同意</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p style="text-align: center;font-size: 14px">授权后表明您已同意 《Funicorn登录服务协议》</p>
+                    </div>
+                    <hr style="border-bottom:1px solid !important;color: #e5e5e5"/>
+                    <div style="margin-top: 5px;width: 100%;height: 50px">
+                        <p style="text-align: center;font-size: 14px">授权后将重定向到</p>
+                        <p style="text-align: center;font-size: 14px"><b th:text="${redirectUri}"></b></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+    function cancelConsent() {
+        document.consent_form.reset();
+        document.consent_form.submit();
+    }
+</script>

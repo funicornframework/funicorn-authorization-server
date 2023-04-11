@@ -1,0 +1,35 @@
+server:
+  port: 8888
+# 应用名称
+spring:
+  application:
+    name: @project.artifactId@
+
+  profiles:
+    active: dev
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://106.13.217.154:3306/funicorn_upms_2?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+    username: root
+    password: Liuhao20201@
+
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: utf-8
+    servlet:
+      content-type: text/html
+    cache: true
+
+funicorn:
+  logger:
+    enable: true
+    app-name: @project.artifactId@
+    keep-alive-time-minutes: 5
+    server-addr: 106.13.217.154:17777
+    auth:
+      username: framework
+      password: 123456
