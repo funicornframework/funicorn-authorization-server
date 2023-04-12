@@ -24,11 +24,11 @@ public class CustomEndpoint {
     @Resource
     private RegisteredClientRepository registeredClientRepository;
 
-    @RequestMapping("/index")
-    public String index(){
-        return "index";
-    }
-
+    /**
+     * 错误
+     *
+     * @return {@link String}
+     */
     @RequestMapping("/oauth2/error")
     public String error(){
         return "error";
