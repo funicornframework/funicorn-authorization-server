@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -36,7 +37,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         int code = ExceptionCode.OAUTH2_LOGIN_PARAM_INVALID.getCode();
         if (savedRequest!=null) {
             redirectUri = savedRequest.getRedirectUrl();
-            code = Result.SUCCESS;
+            if (redirectUri.contains("error=")) {
+                redirectUri = "/oauth2/error?" + new URL(redirectUri).getQuery().replace("error=","error_desc=");
+            } else {
+                code = Result.SUCCESS;
+            }
         } else {
             String responseType = request.getParameter("response_type");
             String clientId = request.getParameter("client_id");

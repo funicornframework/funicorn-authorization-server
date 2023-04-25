@@ -16,6 +16,6 @@ public class CodeGen {
         generator.username="root";
         generator.password="Liuhao20201@";
         generator.packageName="com.funicorn.authorization.server";
-        generator.generateCode("organization","user_org");
+        generator.generateCode("oauth2_registered_client");
     }
 }

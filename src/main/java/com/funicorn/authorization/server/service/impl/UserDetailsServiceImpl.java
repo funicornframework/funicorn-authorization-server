@@ -1,6 +1,8 @@
 package com.funicorn.authorization.server.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.funicorn.authorization.server.config.AuthorizationServerConfig;
 import com.funicorn.authorization.server.core.LoginUserDetails;
 import com.funicorn.authorization.server.entity.*;
 import com.funicorn.authorization.server.exception.TenantNotFoundException;
@@ -14,8 +16,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +32,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
+    private static final AntPathMatcher ANTPATHMATCHER = new AntPathMatcher();
 
     @Resource
     private UserInfoMapper userInfoMapper;
@@ -86,6 +95,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (organization!=null) {
                 loginUser.setOrgId(organization.getId());
                 loginUser.setOrgName(organization.getName());
+            }
+        }
+
+        loginUser.setRegisterTime(userInfo.getCreatedTime());
+
+        //更新本次登录时间点
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            if ((ANTPATHMATCHER.match(AuthorizationServerConfig.CUSTOM_LOGIN_PROCESS_URL,request.getRequestURI()))){
+                LambdaUpdateWrapper<UserInfo> userInfoUpdateWrapper = new LambdaUpdateWrapper<>();
+                userInfoUpdateWrapper.set(UserInfo::getLastLoginTime, LocalDateTime.now());
+                userInfoUpdateWrapper.eq(UserInfo::getUserId,userInfo.getUserId());
+                userInfoMapper.update(null,userInfoUpdateWrapper);
             }
         }
         return loginUser;

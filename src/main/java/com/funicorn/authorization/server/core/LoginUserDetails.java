@@ -102,6 +102,18 @@ public class LoginUserDetails implements UserDetails, Serializable {
     private String orgName;
 
     /**
+     * 注册时间
+     * */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private LocalDateTime registerTime;
+
+    /**
+     * 上次登录时间
+     * */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private LocalDateTime lastLoginTime;
+
+    /**
      * 角色编码列表
      * */
     private List<String> roles;
@@ -321,5 +333,21 @@ public class LoginUserDetails implements UserDetails, Serializable {
 
     public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
+    }
+
+    public LocalDateTime getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(LocalDateTime registerTime) {
+        this.registerTime = registerTime;
+    }
+
+    public LocalDateTime getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(LocalDateTime lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
     }
 }

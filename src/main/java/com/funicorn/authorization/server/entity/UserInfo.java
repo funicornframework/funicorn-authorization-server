@@ -100,6 +100,11 @@ public class UserInfo extends BaseEntity {
      */
     private String tenantId;
 
+    /**
+     * 上次登录时间
+     */
+    private LocalDateTime lastLoginTime;
+
     public String getUserType() {
         return userType;
     }
@@ -226,6 +231,14 @@ public class UserInfo extends BaseEntity {
 
     public void setLocked(Integer locked) {
         this.locked = locked;
+    }
+
+    public LocalDateTime getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(LocalDateTime lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
     }
 
     @Override

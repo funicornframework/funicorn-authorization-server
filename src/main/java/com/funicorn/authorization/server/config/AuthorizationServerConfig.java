@@ -1,5 +1,6 @@
 package com.funicorn.authorization.server.config;
 
+import com.funicorn.authorization.server.core.MybatisRegisteredClientRepository;
 import com.funicorn.authorization.server.core.UuidAccessTokenGenerator;
 import com.funicorn.authorization.server.core.UuidRefreshTokenGenerator;
 import com.funicorn.authorization.server.handler.*;
@@ -14,8 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
@@ -36,7 +35,7 @@ public class AuthorizationServerConfig {
 
     private static final String CUSTOM_LOGIN_PAGE_URI = "/oauth2/login";
 
-    private static final String CUSTOM_LOGIN_PROCESS_URL = "/user/login";
+    public static final String CUSTOM_LOGIN_PROCESS_URL = "/user/login";
 
     @Resource
     private LoginSuccessHandler loginSuccessHandler;
@@ -48,6 +47,8 @@ public class AuthorizationServerConfig {
     private UuidAccessTokenGenerator uuidAccessTokenGenerator;
     @Resource
     private JdbcTemplate jdbcTemplate;
+    @Resource
+    private MybatisRegisteredClientRepository mybatisRegisteredClientRepository;
 
     /**
      * 密码编码器
@@ -70,23 +71,13 @@ public class AuthorizationServerConfig {
     }
 
     /**
-     * 注册客户端库
-     *
-     * @return RegisteredClientRepository
-     */
-    @Bean
-    public RegisteredClientRepository registeredClientRepository() {
-        return new JdbcRegisteredClientRepository(jdbcTemplate);
-    }
-
-    /**
      * 注册授权同意服务
      *
      * @return JdbcOAuth2AuthorizationConsentService
      */
     @Bean
     public JdbcOAuth2AuthorizationConsentService jdbcOAuth2AuthorizationConsentService(){
-        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate,registeredClientRepository());
+        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate,mybatisRegisteredClientRepository);
     }
 
     /**
@@ -95,7 +86,7 @@ public class AuthorizationServerConfig {
      * @return JdbcOAuth2AuthorizationService
      */
     public JdbcOAuth2AuthorizationService jdbcOAuth2AuthorizationService(){
-        return new JdbcOAuth2AuthorizationService(jdbcTemplate,registeredClientRepository());
+        return new JdbcOAuth2AuthorizationService(jdbcTemplate,mybatisRegisteredClientRepository);
     }
 
     @Bean
@@ -106,9 +97,11 @@ public class AuthorizationServerConfig {
         http.apply(authorizationServerConfigurer);
         authorizationServerConfigurer.authorizationConsentService(jdbcOAuth2AuthorizationConsentService());
         authorizationServerConfigurer.authorizationService(jdbcOAuth2AuthorizationService());
-
         //授权端点设置
-        authorizationServerConfigurer.authorizationEndpoint(endpoint-> endpoint.consentPage(CUSTOM_CONSENT_PAGE_URI));
+        authorizationServerConfigurer.authorizationEndpoint(endpoint-> {
+            endpoint.consentPage(CUSTOM_CONSENT_PAGE_URI);
+            endpoint.errorResponseHandler(new AuthorizeFailureHandler());
+        });
 
         //令牌生成器设置
         authorizationServerConfigurer.tokenGenerator(new DelegatingOAuth2TokenGenerator(
