@@ -30,7 +30,7 @@ public class Tenant extends BaseEntity {
     /**
      * logo地址
      */
-    private String logoUrl;
+    private String logo;
 
     /**
      * 描述
@@ -54,12 +54,12 @@ public class Tenant extends BaseEntity {
         this.tenantName = tenantName;
     }
 
-    public String getLogoUrl() {
-        return logoUrl;
+    public String getLogo() {
+        return logo;
     }
 
-    public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 
     public String getRemark() {
@@ -76,7 +76,7 @@ public class Tenant extends BaseEntity {
         return "Tenant{" +
         "id=" + id +
         ", tenantName=" + tenantName +
-        ", logoUrl=" + logoUrl +
+        ", logo=" + logo +
         ", remark=" + remark +
         "}";
     }

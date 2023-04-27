@@ -61,11 +61,6 @@ public class UserInfo extends BaseEntity {
     private String idCard;
 
     /**
-     * 联系地址
-     */
-    private String address;
-
-    /**
      * 昵称
      */
     private String nickName;
@@ -177,14 +172,6 @@ public class UserInfo extends BaseEntity {
         this.idCard = idCard;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getNickName() {
         return nickName;
     }
@@ -251,7 +238,6 @@ public class UserInfo extends BaseEntity {
         ", phone=" + phone +
         ", idType=" + idType +
         ", idCard=" + idCard +
-        ", address=" + address +
         ", nickName=" + nickName +
         ", headLogo=" + headLogo +
         ", enabled=" + enabled +
