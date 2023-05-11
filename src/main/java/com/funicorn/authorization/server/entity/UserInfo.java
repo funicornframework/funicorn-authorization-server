@@ -36,7 +36,7 @@ public class UserInfo extends BaseEntity {
     private String password;
 
     /**
-     * 用户类型 SUPER/ADMIN/NORMAL
+     * 用户类型
      * */
     private String userType;
 
@@ -51,9 +51,9 @@ public class UserInfo extends BaseEntity {
     private String phone;
 
     /**
-     * 证件类型 0身份证 1港澳通行证 2学生证 3护照 4士官证 5驾驶证
+     * 证件类型
      */
-    private Integer idType;
+    private String idType;
 
     /**
      * 证件号码
@@ -156,11 +156,11 @@ public class UserInfo extends BaseEntity {
         this.phone = phone;
     }
 
-    public Integer getIdType() {
+    public String getIdType() {
         return idType;
     }
 
-    public void setIdType(Integer idType) {
+    public void setIdType(String idType) {
         this.idType = idType;
     }
 

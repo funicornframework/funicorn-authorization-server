@@ -88,30 +88,16 @@ public class UuidAccessTokenGenerator implements OAuth2TokenGenerator<OAuth2Acce
                     additionInformation = JsonUtil.object2Object(loginUserDetails,LoginUser.class);
                 }
 
-                if (context.getAuthorizedScopes().contains(FunicornScopes.ID_CARD)) {
-                    additionInformation.setIdType(loginUserDetails.getIdType());
-                    additionInformation.setIdCard(loginUserDetails.getIdCard());
-                } else {
-                    additionInformation.setIdType(null);
-                    additionInformation.setIdCard("*******");
-                }
-
-                if (context.getAuthorizedScopes().contains(FunicornScopes.ADDRESS)) {
-                    additionInformation.setAddress(loginUserDetails.getAddress());
-                } else {
-                    additionInformation.setAddress("*******");
-                }
-
                 if (context.getAuthorizedScopes().contains(FunicornScopes.EMAIL)) {
                     additionInformation.setEmail(loginUserDetails.getEmail());
                 } else {
-                    additionInformation.setEmail("*******");
+                    additionInformation.setEmail(null);
                 }
 
                 if (context.getAuthorizedScopes().contains(FunicornScopes.PHONE)) {
                     additionInformation.setPhone(loginUserDetails.getPhone());
                 } else {
-                    additionInformation.setPhone("*******");
+                    additionInformation.setPhone(null);
                 }
 
                 claimsBuilder.claim("loginUser", additionInformation);

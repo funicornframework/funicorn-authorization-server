@@ -28,64 +28,73 @@ public class LoginUserDetails implements UserDetails, Serializable {
      * 用户id
      * */
     private String userId;
+
     /**
      * 用户名账号
      * */
     private String username;
+
     /**
      * 登录密码
      * */
     private String password;
+
     /**
      * 用户类型
      */
     private String userType;
+
     /**
      * 邮箱
      * */
     private String email;
+
     /**
      * 电话
      */
     private String phone;
+
     /**
      * 证件类型
-     * 0身份证 1港澳通行证 2学生证 3护照 4士官证 5驾驶证
      * */
-    private Integer idType;
-    /**
-     * 证件号码
-     * */
-    private String idCard;
+    private String idType;
+
     /**
      * 联系地址
      * */
     private String address;
+
     /**
      * 昵称
      * */
     private String nickName;
+
     /**
      * 用户头像
      * */
     private String headLogo;
+
     /**
      * 账号是否可用 0：不可用 ；1：可用
      * */
     private Integer enabled;
+
     /**
      * 密码失效时间
      * */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime expireTime;
+
     /**
      * 账号是否被锁定 0：锁定；1：正常
      * */
     private Integer locked;
+
     /**
      * 租户id
      * */
     private String tenantId;
+
     /**
      * 租户名称
      * */
@@ -212,20 +221,12 @@ public class LoginUserDetails implements UserDetails, Serializable {
         this.phone = phone;
     }
 
-    public Integer getIdType() {
+    public String getIdType() {
         return idType;
     }
 
-    public void setIdType(Integer idType) {
+    public void setIdType(String idType) {
         this.idType = idType;
-    }
-
-    public String getIdCard() {
-        return idCard;
-    }
-
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
     }
 
     public String getAddress() {

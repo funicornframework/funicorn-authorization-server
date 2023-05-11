@@ -94,20 +94,12 @@ public class CustomEndpoint {
 
         static {
             SCOPE_DESC.put(
-                    "idcard",
-                    "获取您的身份证号码"
-            );
-            SCOPE_DESC.put(
                     "email",
                     "获取您的邮箱地址"
             );
             SCOPE_DESC.put(
                     "phone",
                     "获取您的手机号码"
-            );
-            SCOPE_DESC.put(
-                    "address",
-                    "获取您的联系地址"
             );
             SCOPE_DESC.put(
                     "profile",

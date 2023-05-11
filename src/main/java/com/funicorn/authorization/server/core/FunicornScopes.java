@@ -7,11 +7,6 @@ package com.funicorn.authorization.server.core;
 public interface FunicornScopes {
 
     /**
-     * 身份证
-     */
-    String ID_CARD = "idcard";
-
-    /**
      * 身份信息 用户名、昵称、用户头像，所属租户
      */
     String PROFILE = "profile";
@@ -20,11 +15,6 @@ public interface FunicornScopes {
      * 电子邮件
      */
     String EMAIL = "email";
-
-    /**
-     * 地址
-     */
-    String ADDRESS = "address";
 
     /**
      * 电话
