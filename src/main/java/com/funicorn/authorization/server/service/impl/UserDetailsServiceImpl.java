@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.funicorn.authorization.server.config.AuthorizationServerConfig;
 import com.funicorn.authorization.server.core.LoginUserDetails;
 import com.funicorn.authorization.server.entity.*;
-import com.funicorn.authorization.server.exception.TenantNotFoundException;
 import com.funicorn.authorization.server.mapper.*;
 import com.funicorn.framework.common.base.json.JsonUtil;
 import com.funicorn.logger.core.sys.SysLog;
@@ -62,12 +61,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userInfo==null) {
             throw new UsernameNotFoundException("用户名不存在");
         }
-        Tenant tenant = tenantMapper.selectById(userInfo.getTenantId());
-        if (tenant==null) {
-            throw new TenantNotFoundException("所属租户不存在或已被注销");
-        }
         LoginUserDetails loginUser = JsonUtil.object2Object(userInfo,LoginUserDetails.class);
-        loginUser.setTenantName(tenant.getTenantName());
+        Tenant tenant = tenantMapper.selectById(userInfo.getTenantId());
+        if (tenant!=null) {
+            loginUser.setTenantName(tenant.getTenantName());
+        }
         List<UserRole> userRoles = userRoleMapper.selectList(Wrappers.<UserRole>lambdaQuery()
                 .eq(UserRole::getUserId,userInfo.getUserId()).eq(UserRole::getTenantId,userInfo.getTenantId()));
         if (!userRoles.isEmpty()) {

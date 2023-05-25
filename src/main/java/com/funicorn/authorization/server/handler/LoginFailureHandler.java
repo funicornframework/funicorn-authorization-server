@@ -2,7 +2,6 @@ package com.funicorn.authorization.server.handler;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.funicorn.authorization.server.exception.ExceptionCode;
-import com.funicorn.authorization.server.exception.TenantNotFoundException;
 import com.funicorn.boot.starter.model.Result;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
@@ -41,9 +40,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         } else if (e instanceof LockedException) {
             //账号锁定
             result = Result.error(ExceptionCode.USER_ACCOUNT_LOCKED.getCode(),ExceptionCode.USER_ACCOUNT_LOCKED.getMsg());
-        } else if (e.getCause() instanceof TenantNotFoundException) {
-            //所属租户不存在或已被注销
-            result = Result.error(ExceptionCode.TENANT_NOT_EXIST.getCode(),e.getMessage());
         }
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         writeResponse(response, result);
