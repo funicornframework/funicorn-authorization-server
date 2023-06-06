@@ -49,8 +49,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Resource
     private OrganizationMapper organizationMapper;
     @Resource
-    private UserOrgMapper userOrgMapper;
-    @Resource
     private UserMenuMapper userMenuMapper;
 
     @SysLog(value = "用户登录",OperateType = OperateType.LOGIN)
@@ -91,6 +89,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     }
                 }
             }
+
+            Organization organization = organizationMapper.selectById(userRoles.get(0).getOrganizationId());
+            if (organization!=null) {
+                loginUser.setOrgId(organization.getId());
+                loginUser.setOrgName(organization.getName());
+            }
         }
 
         //user_menu
@@ -107,16 +111,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         loginUser.getPermissions().addAll(permissions);
                     }
                 }
-            }
-        }
-
-        //user_org
-        UserOrg userOrg = userOrgMapper.selectOne(Wrappers.<UserOrg>lambdaQuery().eq(UserOrg::getUserId,userInfo.getUserId()).last("limit 1"));
-        if (userOrg!=null) {
-            Organization organization = organizationMapper.selectById(userOrg.getId());
-            if (organization!=null) {
-                loginUser.setOrgId(organization.getId());
-                loginUser.setOrgName(organization.getName());
             }
         }
 

@@ -39,6 +39,11 @@ public class UserRole implements Serializable {
     private String roleId;
 
     /**
+     * 组织ID
+     */
+    private String organizationId;
+
+    /**
      * 租户id
      */
     @TableField(fill = FieldFill.INSERT)
@@ -101,6 +106,14 @@ public class UserRole implements Serializable {
 
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 
     @Override
