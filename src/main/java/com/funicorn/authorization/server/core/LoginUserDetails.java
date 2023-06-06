@@ -123,9 +123,14 @@ public class LoginUserDetails implements UserDetails, Serializable {
     private LocalDateTime lastLoginTime;
 
     /**
-     * 角色编码列表
+     * 角色岗位编码
      * */
-    private List<String> roles;
+    private String roleCode;
+
+    /**
+     * 角色岗位名称
+     */
+    private String roleName;
     /**
      * 角色权限列表
      * */
@@ -137,14 +142,8 @@ public class LoginUserDetails implements UserDetails, Serializable {
         if (this.permissions!=null && !this.permissions.isEmpty()){
             authList.addAll(this.permissions);
         }
-        if (this.roles!=null && !roles.isEmpty()){
-            for (String code:this.roles) {
-                if (code.startsWith("ROLE_")){
-                    authList.add(code);
-                }else {
-                    authList.add("ROLE_" + code);
-                }
-            }
+        if (StringUtils.isNotBlank(this.roleCode)){
+            authList.add(this.roleCode);
         }
         if (authList.isEmpty()){
             return null;
@@ -320,12 +319,20 @@ public class LoginUserDetails implements UserDetails, Serializable {
         this.userType = userType;
     }
 
-    public List<String> getRoles() {
-        return roles;
+    public String getRoleCode() {
+        return roleCode;
     }
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public List<String> getPermissions() {

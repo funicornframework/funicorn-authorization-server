@@ -50,6 +50,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private OrganizationMapper organizationMapper;
     @Resource
     private UserOrgMapper userOrgMapper;
+    @Resource
+    private UserMenuMapper userMenuMapper;
 
     @SysLog(value = "用户登录",OperateType = OperateType.LOGIN)
     @Override
@@ -66,15 +68,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (tenant!=null) {
             loginUser.setTenantName(tenant.getTenantName());
         }
+
+        //user_role
         List<UserRole> userRoles = userRoleMapper.selectList(Wrappers.<UserRole>lambdaQuery()
                 .eq(UserRole::getUserId,userInfo.getUserId()).eq(UserRole::getTenantId,userInfo.getTenantId()));
         if (!userRoles.isEmpty()) {
             List<String> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
             List<Role> roleInfos = roleMapper.selectList(Wrappers.<Role>lambdaQuery().in(Role::getId,roleIds));
             if (!roleInfos.isEmpty()) {
-                List<String> roles = roleInfos.stream().map(Role::getCode).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-                loginUser.setRoles(roles);
-                List<RoleMenu> roleMenus = roleMenuMapper.selectList(Wrappers.<RoleMenu>lambdaQuery().eq(RoleMenu::getTenantId,userInfo.getTenantId()).in(RoleMenu::getRoleId,roles));
+                loginUser.setRoleCode(roleInfos.get(0).getCode());
+                loginUser.setRoleName(roleInfos.get(0).getName());
+                List<RoleMenu> roleMenus = roleMenuMapper.selectList(Wrappers.<RoleMenu>lambdaQuery()
+                        .eq(RoleMenu::getTenantId,userInfo.getTenantId()).eq(RoleMenu::getRoleId,roleInfos.get(0).getId()));
                 if (!roleMenus.isEmpty()) {
                     List<String> menuIds = roleMenus.stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
                     if (!menuIds.isEmpty()) {
@@ -87,6 +92,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 }
             }
         }
+
+        //user_menu
+        List<UserMenu> userMenuList = userMenuMapper.selectList(Wrappers.<UserMenu>lambdaQuery().eq(UserMenu::getUserId,loginUser.getUserId()));
+        if (!userMenuList.isEmpty()) {
+            List<String> menuIds = userMenuList.stream().map(UserMenu::getMenuId).collect(Collectors.toList());
+            if (!menuIds.isEmpty()) {
+                List<Menu> menus = menuMapper.selectList(Wrappers.<Menu>lambdaQuery().in(Menu::getId,menuIds));
+                if (!menus.isEmpty()) {
+                    List<String> permissions = menus.stream().map(Menu::getPermission).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+                    if (loginUser.getPermissions()==null) {
+                        loginUser.setPermissions(permissions);
+                    } else {
+                        loginUser.getPermissions().addAll(permissions);
+                    }
+                }
+            }
+        }
+
+        //user_org
         UserOrg userOrg = userOrgMapper.selectOne(Wrappers.<UserOrg>lambdaQuery().eq(UserOrg::getUserId,userInfo.getUserId()).last("limit 1"));
         if (userOrg!=null) {
             Organization organization = organizationMapper.selectById(userOrg.getId());
@@ -96,6 +120,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
         }
 
+        //注册时间
         loginUser.setRegisterTime(userInfo.getCreatedTime());
 
         //更新本次登录时间点
