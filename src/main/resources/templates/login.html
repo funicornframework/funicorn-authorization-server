@@ -34,7 +34,7 @@
         <div class="layui-card login-box">
             <div class="layui-card-header"><h2 style="text-align: center;">密码登录</h2></div>
             <div class="layui-card-body" style="padding-top: 20px">
-                <form class="layui-form" lay-filter="loginForm" id="loginForm" action="/user/login" method="post">
+                <form class="layui-form" lay-filter="loginForm" id="loginForm" th:action="${baseUrl} + '/user/login'" method="post">
                     <div class="layui-form-item">
                         <input type="text" name="username" lay-verify="username" autocomplete="off" placeholder="请输入登录账号" class="layui-input">
                     </div>
@@ -43,7 +43,7 @@
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-inline" style="width: 100%;padding-top: 30px;">
-                            <button style="width: 100%;background-color: #0099FF;border-radius: 3px" id="submitLogin" lay-submit lay-filter="login" class="layui-btn">登录</button>
+                            <button style="width: 100%;background-color: #f25e0f;border-radius: 4px" id="submitLogin" lay-submit lay-filter="login" class="layui-btn">登录</button>
                         </div>
                     </div>
                 </form>
@@ -81,7 +81,7 @@
 
         //提交登录
         form.on('submit(login)',function (data) {
-            let loginProcessUrl = '/user/login?uuid=' + guid2();
+            let loginProcessUrl = data.form.action + '?uuid=' + guid2();
             if (response_type) {
                 loginProcessUrl = loginProcessUrl + '&response_type=' + response_type;
             }

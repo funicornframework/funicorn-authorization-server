@@ -65,7 +65,7 @@ public class UuidAccessTokenGenerator implements OAuth2TokenGenerator<OAuth2Acce
 
         OAuth2TokenClaimsSet accessTokenClaimsSet = claimsBuilder.build();
 
-        return new RedisAccessTokenClaims(OAuth2AccessToken.TokenType.BEARER,
+        return new OAuth2AccessTokenClaims(OAuth2AccessToken.TokenType.BEARER,
                 UUID.randomUUID().toString(), accessTokenClaimsSet.getIssuedAt(), accessTokenClaimsSet.getExpiresAt(),
                 context.getAuthorizedScopes(), accessTokenClaimsSet.getClaims());
     }
@@ -105,10 +105,10 @@ public class UuidAccessTokenGenerator implements OAuth2TokenGenerator<OAuth2Acce
         }
     }
 
-    private static final class RedisAccessTokenClaims extends OAuth2AccessToken implements ClaimAccessor {
+    private static final class OAuth2AccessTokenClaims extends OAuth2AccessToken implements ClaimAccessor {
         private final Map<String, Object> claims;
 
-        private RedisAccessTokenClaims(TokenType tokenType, String tokenValue,
+        private OAuth2AccessTokenClaims(TokenType tokenType, String tokenValue,
                                         Instant issuedAt, Instant expiresAt, Set<String> scopes, Map<String, Object> claims) {
             super(tokenType, tokenValue, issuedAt, expiresAt, scopes);
             this.claims = claims;

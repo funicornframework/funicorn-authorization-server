@@ -2,6 +2,7 @@ package com.funicorn.authorization.server.handler;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.funicorn.authorization.server.exception.ExceptionCode;
+import com.funicorn.authorization.server.property.AuthorizationProperties;
 import com.funicorn.boot.starter.model.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +29,9 @@ import java.nio.charset.StandardCharsets;
  */
 @Configuration
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+
+    @Resource
+    private AuthorizationProperties authorizationProperties;
 
     private final RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -88,7 +93,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         //对redirectUrl编码
         redirectUrl = URLEncoder.encode(redirectUrl,"UTF-8");
         StringBuilder sb = new StringBuilder();
-        sb.append("/oauth2/authorize?client_id=").append(clientId)
+        sb.append(authorizationProperties.getBaseUrl()).append("/oauth2/authorize?client_id=").append(clientId)
                 .append("&redirect_uri=").append(redirectUrl)
                 .append("&response_type=").append(responseType);
 

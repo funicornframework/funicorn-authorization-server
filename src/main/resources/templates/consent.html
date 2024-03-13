@@ -23,11 +23,11 @@
         }
 
         .layui-form-checkbox[lay-skin=primary]:hover i {
-            border-color: #0099FF !important;
+            border-color: #f25e0f !important;
         }
 
         .layui-form-checked[lay-skin=primary] i {
-            background-color: #0099FF !important;
+            background-color: #f25e0f !important;
         }
 
         .consent-box {
@@ -46,7 +46,7 @@
         <div class="layui-card consent-box">
             <div class="layui-card-header"><h4 style="text-align: center"><b th:text="${clientName}"></b> 希望获得以下许可：</h4></div>
             <div class="layui-card-body">
-                <form class="layui-form" name="consent_form" method="post" action="/oauth2/authorize">
+                <form class="layui-form" name="consent_form" method="post" th:action="${baseUrl} + '/oauth2/authorize'">
                     <input type="hidden" name="client_id" th:value="${clientId}">
                     <input type="hidden" name="state" th:value="${state}">
                     <div class="layui-form-item">

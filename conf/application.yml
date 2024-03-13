@@ -24,12 +24,6 @@ spring:
       content-type: text/html
     cache: true
 
-funicorn:
-  logger:
-    enable: true
-    app-name: funicorn-authorization-server
-    keep-alive-time-minutes: 5
-    server-addr: 139.9.72.138:17777
-    client:
-      port: 8888
-      client-secret: bd4f807b2f86466699119ca97464f266
+authorization:
+  # 如果nginx用了代理，请在这里保持一致
+  base-url: /

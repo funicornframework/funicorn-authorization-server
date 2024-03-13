@@ -1,5 +1,6 @@
 package com.funicorn.authorization.server.controller;
 
+import com.funicorn.authorization.server.property.AuthorizationProperties;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -22,6 +23,8 @@ import java.util.*;
 public class CustomEndpoint {
 
     @Resource
+    private AuthorizationProperties authorizationProperties;
+    @Resource
     private RegisteredClientRepository registeredClientRepository;
 
     /**
@@ -40,7 +43,8 @@ public class CustomEndpoint {
      * String
      */
     @RequestMapping("/oauth2/login")
-    public String login(){
+    public String login(Model model){
+        model.addAttribute("baseUrl",authorizationProperties.getBaseUrl());
         return "login";
     }
 
